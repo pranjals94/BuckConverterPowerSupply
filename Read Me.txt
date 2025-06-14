@@ -1,0 +1,120 @@
+
+
+pcb design and routing current paths, ground loops for mcu and load, placement of the suppression diodes, additional passive filter components matters a lot for noise suppression due to inductive switching. the traces itself acts a inductor called parasitic inductance, take measures to provide low impedance(resistance) in the ground traces by thickening the ground traces and shortening the length.
+
+provide low inductance ground path in surge suppression circuit.
+keep traces short and direct if possible
+
+tvs diodes are faster measuring in nano secs.
+
+high inductance in pcb traces and vias can delay the diode response time.
+
+if the return ground is long it will  also have more resistance(impedance) that will cause voltage drop and things go worse when inductive kick back occurs in the power rails. so make it short and thick to possibility.
+
+decoupling capacitors 104(100nf) ceramic(has low esr) capacitor for high frequency noises and 10 to 100 mfd electrolytic/tentalum capacitor for bulk energy and low frequencies. provide it to all the power pins in the mcu
+
+Another way to reduce noise using ferrite beads
++5V
+ |
+[Ferrite Bead]
+ |
+ +--[100nF]--GND
+ |
+ +--[10uF]---GND
+ |
+ Vcc → ATmega8
+
+Real-Life Tip:
+If your ATmega8 is randomly resetting, freezing, or glitching, poor decoupling is often the cause. Proper caps can fix even tough problems like:
+
+Inductive switching resets
+
+Power-on initialization failures
+
+ADC noise or unstable readings
+
+
+4. Star Grounding for Return Paths
+Don't let power or load return currents share ground with the MCU.
+
+Use a star grounding layout, with all grounds meeting at one single point, typically near the power supply input.
+
+
+✅ 5. Use a Solid Ground Plane (if on PCB)
+If you're using a PCB:
+
+Make one entire layer a ground plane
+
+This massively reduces EMI and improves decoupling efficiency
+
+It also helps reduce ground bounce
+
+
+If you see noise, you can tune:
+
+Add more 100 nF ceramics
+
+Increase bulk capacitance
+
+Use ferrite beads with higher impedance
+
+
+same is the case while measuring signals in cro , take the ground wire thick and as short as possible to reduce noise pick up. (common mode noise)
+
+hi impedance state means that current and voltage are so low that noise can easily couple with it , example voltage dividers.
+
+The high-impedance state (often called Hi-Z or tri-state) is a condition where a digital pin or circuit effectively disconnects itself from the rest of the circuit. It's like the pin is "not there" — it neither drives HIGH nor LOW; it's just floating.
+
+🔧 What it Means:
+A pin in Hi-Z does not source or sink current.
+
+Its output driver is disabled.
+
+It allows multiple devices to share a connection line (like in I²C or SPI buses), but only one drives it at a time.
+
+* during inductive spikes the mcu may not reset but the internal ram data may get corrupted check it rigorously.
+
+*if during flashing the Avr microcontroller, forgot to power the development board, the power may flow from the data lines of mcu and back to the development board through the internal circuitry of the mcu. this may damage the port drivers of the mcu, the power flows from the sck and MOSI pins as these lines are initiated by the host ie the programmer.
+
+In PCB design, sharp 90-degree angles in traces should be avoided. 45-degree angles or gentle curves are preferred as they minimize signal reflections, reduce electromagnetic interference (EMI), and improve manufacturability by preventing etching issues during PCB fabrication. Use curved traces for ultra-high-speed or RF designs. 
+
+At a 90° bend, current tends to concentrate more at the inner corner:
+Leads to localized heating.
+Increases chance of trace failure over time.
+
+Trace length equalization is a PCB layout technique used to ensure that multiple signals reach their destination at the same time, especially important in high-speed digital and RF designs.
+
+✅ Why Is It Important?
+When multiple signals are part of a timing-critical group (like a data bus or differential pair), unequal trace lengths cause:
+
+Timing skew (signals arrive at different times)
+
+Data corruption
+
+Setup/hold time violations
+
+Clock/data mismatch
+
+📌 Where It's Used:
+DDR / SDRAM data lines
+
+Address/data/control lines must be length-matched to the clock.
+
+USB, HDMI, PCIe, LVDS
+
+Differential pairs (like D+ and D−) need near-perfect matching.
+
+Ethernet (100/1000BASE-T)
+
+Pairs need equal length for proper signal integrity.
+
+🧰 How It's Done:
+1. Serpentine Routing ("Meander")
+Add “wiggles” to shorter traces to match the longest one.
+
+iF the curcuit has an inductor it should not be placed close to matellic components as it will affect the inductance value.
+
+
+look for EMI ( Electromagnetic Interference)and EMC (Electromagnetic Compatibility) pcb design and grounding ideas. 
+
+
